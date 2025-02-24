@@ -4,13 +4,10 @@ import time
 import os
 from dotenv import load_dotenv
 
-import TextHandler
-
-# Reddit API credentials (replace with your own)
+import GenerateContent
 load_dotenv()
 SEEN_UPVOTES = "seen_upvotes.json"
 
-# Load previously seen upvotes
 def load_seen_upvotes():
     try:
         with open(SEEN_UPVOTES, "r") as file:
@@ -21,8 +18,6 @@ def load_seen_upvotes():
 def save_seen_upvotes(upvote_ids):
     with open(SEEN_UPVOTES, "w") as file:
         json.dump(list(upvote_ids), file)
-
-# Authenticate with Reddit
 def authenticate():
     return praw.Reddit(
         client_id=os.getenv("REDDIT_CLIENT_ID"),
@@ -33,7 +28,6 @@ def authenticate():
         redirect_uri="http://localhost:8080",
     )
 
-# Get newly upvoted posts
 def get_new_upvotes(reddit):
     seen_upvotes = load_seen_upvotes()
     new_upvotes = []
@@ -46,17 +40,30 @@ def get_new_upvotes(reddit):
     save_seen_upvotes(seen_upvotes)
     return new_upvotes
 
-# Main loop
+
+def get_top_comment(post):
+    post.comments.replace_more(limit=0)
+    top_comment = None
+
+    for comment in post.comments:
+        if comment.author and comment.author.name != 'AutoModerator' and not comment.stickied:
+            top_comment = comment
+            break
+
+    if top_comment:
+        return top_comment.body
+    return "Yeah, thats a crazy one"
+
 def main():
     reddit = authenticate()
-    print("Bot started...")
+    print("Started")
 
     while True:
         new_upvotes = get_new_upvotes(reddit)
 
         if new_upvotes:
             for post in new_upvotes:
-                TextHandler.text(f"{post.title} {post.selftext}")
+                GenerateContent.handle_text(f"{post.title} {post.selftext.replace("*","")}", get_top_comment(post).replace("*",""))
         time.sleep(5)
 
 if __name__ == "__main__":
