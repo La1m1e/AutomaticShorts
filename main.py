@@ -5,9 +5,11 @@ import os
 from dotenv import load_dotenv
 
 import GenerateContent
+import YTUpload
+
 load_dotenv()
 SEEN_UPVOTES = "seen_upvotes.json"
-
+driver = YTUpload.start_browser()
 def load_seen_upvotes():
     try:
         with open(SEEN_UPVOTES, "r") as file:
@@ -63,7 +65,7 @@ def main():
 
         if new_upvotes:
             for post in new_upvotes:
-                GenerateContent.handle_text(f"{post.title} {post.selftext.replace("*","")}", get_top_comment(post).replace("*",""))
+                GenerateContent.handle_text(f"{post.title} {post.selftext.replace("*","")}", get_top_comment(post).replace("*",""),driver)
         time.sleep(5)
 
 if __name__ == "__main__":
