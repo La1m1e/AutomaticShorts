@@ -8,7 +8,7 @@ import GenerateContent
 import YTUpload
 
 load_dotenv()
-SEEN_UPVOTES = "seen_upvotes.json"
+SEEN_UPVOTES = "temp/seen_upvotes.json"
 driver = YTUpload.start_browser()
 def load_seen_upvotes():
     try:
