@@ -22,7 +22,6 @@ def start_browser():
     driver = uc.Chrome(options=options)
     driver.set_window_size(800,600)
     driver.get("https://studio.youtube.com")
-    sleep(1)
     return driver
 
 # Function to upload a single video
@@ -36,10 +35,10 @@ def upload_video(driver, video_title, video_description, video_tags):
 
     upload_button = driver.find_element(By.XPATH, '//*[@id="create-icon"]/ytcp-button-shape/button')
     upload_button.click()
-    time.sleep(1)
+    time.sleep(0.3)
     upload_button = driver.find_element(By.XPATH, '//*[@id="text-item-0"]')
     upload_button.click()
-    time.sleep(1)
+    time.sleep(0.3)
 
 
 
@@ -55,7 +54,7 @@ def upload_video(driver, video_title, video_description, video_tags):
 
     input_ = driver.find_element(By.XPATH,'/html/body/ytcp-uploads-dialog/tp-yt-paper-dialog/div/ytcp-animatable[1]/ytcp-ve/ytcp-video-metadata-editor/div/ytcp-video-metadata-editor-basics/div[2]/ytcp-video-description/div/ytcp-social-suggestions-textbox/ytcp-form-input-container/div[1]/div[2]/div/ytcp-social-suggestion-input/div')
     input_.clear()
-    time.sleep(1)
+    time.sleep(0.2)
     input_.send_keys(video_description)
     time.sleep(1)
 
@@ -71,8 +70,9 @@ def upload_video(driver, video_title, video_description, video_tags):
 
     input_ = driver.find_element(By.XPATH, '/html/body/ytcp-uploads-dialog/tp-yt-paper-dialog/div/ytcp-animatable[1]/ytcp-ve/ytcp-video-metadata-editor/div/ytcp-video-metadata-editor-advanced/div[6]/ytcp-form-input-container/div[1]/div/ytcp-free-text-chip-bar/ytcp-chip-bar/div/input')
     input_.clear()
+    time.sleep(0.1)
     input_.send_keys(video_tags)
-    time.sleep(1)
+    time.sleep(0.6)
 
     next_ = driver.find_element(By.XPATH, '//*[@id="next-button"]/ytcp-button-shape')
     next_.click()
@@ -91,6 +91,8 @@ def upload_video(driver, video_title, video_description, video_tags):
     button.click()
 
     print(f"✅ {video_title} uploaded successfully!")
+    sleep(3)
+    os.remove("temp/result.mp4")
 
 #driver = start_browser()
 #input()
